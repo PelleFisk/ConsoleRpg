@@ -1,0 +1,15 @@
+{
+  "name": "Adrian",
+  "hp": 10,
+  "maxHp": 10,
+  "level": 1,
+  "xp": 0,
+  "xpToLevel": 174,
+  "gold": 0,
+  "dmgMin": 2,
+  "dmgMax": 4,
+  "armor": 1,
+  "potions": 5,
+  "statPoints": 0,
+  "skillPoints": 0
+}
