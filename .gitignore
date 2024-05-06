@@ -1,4 +1,5 @@
 ﻿/.idea
+/.git
 ConsoleRpg.sln
-ConsoleRpg/bin
-ConsoleRpg/obj
+/bin
+/obj

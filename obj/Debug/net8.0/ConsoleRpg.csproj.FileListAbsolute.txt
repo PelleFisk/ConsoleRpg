@@ -12,3 +12,4 @@ C:\Users\adria\Code\ConsoleRpg\obj\Debug\net8.0\refint\ConsoleRpg.dll
 C:\Users\adria\Code\ConsoleRpg\obj\Debug\net8.0\ConsoleRpg.pdb
 C:\Users\adria\Code\ConsoleRpg\obj\Debug\net8.0\ConsoleRpg.genruntimeconfig.cache
 C:\Users\adria\Code\ConsoleRpg\obj\Debug\net8.0\ref\ConsoleRpg.dll
+C:\Users\adria\Code\ConsoleRpg\obj\Debug\net8.0\ConsoleRpg.sourcelink.json

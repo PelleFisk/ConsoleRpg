@@ -1,23 +1,37 @@
 ﻿using System.Text.Json;
+using ConsoleRpg.Backend;
+using ConsoleRpg.Ui;
 
 namespace ConsoleRpg;
 
 public class Program
 {
     private static string _savePath = $@"{Environment.CurrentDirectory}\Saves\";
-    public static Player currentPlayer = new Player();
+    public static Player CurrentPlayer = new Player();
     private static bool newPlayer = true;
-    public static bool mainGamePlay = false;
-    private static string playerSavePath = _savePath + @"Player\";
+    public static bool MainGamePlay = false;
+    private static readonly string PlayerSavePath = _savePath + @"Player\";
+    private static readonly string WeaponSavePath = _savePath + @"Weapons\";
+
+    public static Weapon CurrentWeapon = new Weapon(0, "", "", 0, 0, 0, false);
+
+    public static List<Weapon> Weapons = new();
 
     public static void Main()
     {
-        if (!Directory.Exists(playerSavePath))
+        if (!Directory.Exists(PlayerSavePath) && !Directory.Exists(WeaponSavePath))
         {
-            Directory.CreateDirectory(playerSavePath);
+            Directory.CreateDirectory(PlayerSavePath);
+            Directory.CreateDirectory(WeaponSavePath);
         }
 
-        currentPlayer = LoadPlayer();
+        CurrentPlayer = LoadPlayer();
+        LoadWeapons(CurrentPlayer.name);
+
+        while (MainGamePlay)
+        {
+            MainUi.Ui();
+        }
     }
 
     private static Player StartNewPlayer()
@@ -27,29 +41,39 @@ public class Program
             string? name;
             Console.WriteLine("Enter your name: ");
             name = Console.ReadLine();
-            currentPlayer.InitPlayer();
-            currentPlayer.name = name!;
+            CurrentPlayer.InitPlayer();
+            CurrentPlayer.name = name!;
 
+            SavePlayer();
+            SaveWeapon();
+            
             newPlayer = false;
-            mainGamePlay = true;
-
-            Savelayer();
+            MainGamePlay = true;
         }
 
-        return currentPlayer;
+        return CurrentPlayer;
     }
 
-    public static void Savelayer()
+    public static void SavePlayer()
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
-        string json = JsonSerializer.Serialize(currentPlayer, options);
-        string path = playerSavePath + $"{currentPlayer.name}.json";
+        string json = JsonSerializer.Serialize(CurrentPlayer, options);
+        string path = PlayerSavePath + $"{CurrentPlayer.name}.json";
+        File.WriteAllText(path, json);
+    }
+
+    public static void SaveWeapon()
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string fileName = CurrentPlayer.name + ".json";
+        string json = JsonSerializer.Serialize(Weapons, options);
+        string path = WeaponSavePath + fileName;
         File.WriteAllText(path, json);
     }
 
     public static Player LoadPlayer()
     {
-        string[] paths = Directory.GetFiles(playerSavePath);
+        string[] paths = Directory.GetFiles(PlayerSavePath);
         List<Player> players = new List<Player>();
         foreach (var p in paths)
         {
@@ -88,6 +112,26 @@ public class Program
 
             Console.WriteLine("There is no player with that name!!");
             Console.ReadKey();
+        }
+    }
+
+    public static void LoadWeapons(string name)
+    {
+        var path = WeaponSavePath + $"{name}.json";
+        var json = File.ReadAllText(path);
+        Weapons = JsonSerializer.Deserialize<List<Weapon>>(json)!;
+        CurrentWeapon = Weapons.Find(w => w.currentWeapon)!;
+    }
+
+    public static void ProgressBar(string fillerChar, string backgroundChar, decimal value, int size)
+    {
+        int dif = (int)(value * size);
+        for (int i = 0; i < size; i++)
+        {
+            if (i < dif)
+                Console.Write(fillerChar);
+            else
+                Console.Write(backgroundChar);
         }
     }
 }
